@@ -119,7 +119,7 @@
     },
     "signed div narrow 32-bit": {
       "x86InstructionCount": 3,
-      "ExpectedInstructionCount": 10,
+      "ExpectedInstructionCount": 15,
       "x86Insts": [
         "mov    eax, edi",
         "cdq",

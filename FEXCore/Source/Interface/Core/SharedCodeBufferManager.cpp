@@ -19,12 +19,22 @@ static constexpr size_t MAX_CODE_SIZE = 1024 * 1024 * 128;
 CodeBuffer::CodeBuffer(size_t Size, bool ShouldBeNamed)
   : AllocatedSize(Size) {
   Ptr = static_cast<uint8_t*>(FEXCore::Allocator::VirtualAlloc(Size, true));
+#if defined(FEX_HORIZON) || defined(FEX_HORIZON_CACHE_TEST)
+  // Register this buffer with the Horizon JIT registry for writable alias tracking
+  if (ShouldBeNamed) {
+    WineNX::FEX::RegisterJITBuffer(Ptr, Size);
+  }
+#endif
   LOGMAN_THROW_A_FMT(!!Ptr, "Couldn't allocate code buffer");
 
   // Protect the last page of the allocated buffer to trigger SIGSEGV on write access
   uintptr_t LastPageAddr = AlignDown(reinterpret_cast<uintptr_t>(Ptr) + Size - 1, FEXCore::Utils::FEX_PAGE_SIZE);
   if (!FEXCore::Allocator::VirtualProtect(reinterpret_cast<void*>(LastPageAddr), FEXCore::Utils::FEX_PAGE_SIZE,
                                           FEXCore::Allocator::ProtectOptions::None)) {
+#if defined(FEX_HORIZON) || defined(FEX_HORIZON_CACHE_TEST)
+    // In Horizon mode, unregister protection with the ABI registry
+    WineNX::FEX::UnregisterJITBuffer(reinterpret_cast<uintptr_t>(Ptr));
+#endif
     LogMan::Msg::EFmt("Failed to mprotect last page of code buffer.");
   }
 

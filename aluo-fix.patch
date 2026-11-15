@@ -1,0 +1,24 @@
+diff --git a/FEXCore/Source/Interface/Core/JIT/ALUOps.cpp b/FEXCore/Source/Interface/Core/JIT/ALUOps.cpp
+index 6c0f11a9a..86dc15819 100644
+--- a/FEXCore/Source/Interface/Core/JIT/ALUOps.cpp
++++ b/FEXCore/Source/Interface/Core/JIT/ALUOps.cpp
+@@ -90,7 +90,7 @@ DEF_OP(InlineEntrypointOffset) {
+ 
+ DEF_OP(CycleCounter) {
+   auto Op = IROp->C<IR::IROp_CycleCounter>();
+-    if (CTX->HostFeatures.SupportsECV && Op->SelfSynchronizingLoads) {
++  if (CTX->HostFeatures.SupportsECV && Op->SelfSynchronizingLoads) {
+     // CNTVCTSS_EL0 is "self-synchronizing", which means loads can't speculate past this instruction.
+     // Stores still aren't synchronized although.
+     mrs(GetReg(Node), ARMEmitter::SystemRegister::CNTVCTSS_EL0);
+@@ -99,11 +99,7 @@ DEF_OP(CycleCounter) {
+       // If ECV isn't supported then an ISB must be emitted to synchronize all instructions and loads before the cycle read.
+       isb();
+     }
+-#ifdef FEX_HORIZON
+-    mrs(GetReg(Node), ARMEmitter::SystemRegister::CNTPCT_EL0);
+-#else
+     mrs(GetReg(Node), ARMEmitter::SystemRegister::CNTVCT_EL0);
+-#endif
+   }
+ }

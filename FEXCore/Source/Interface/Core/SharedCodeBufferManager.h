@@ -38,6 +38,16 @@ struct CodeBuffer {
     uint8_t* BufferAllocationOffset;
   };
 
+#if defined(FEX_HORIZON) || defined(FEX_HORIZON_CACHE_TEST)
+  // Horizon ABI uses WineNX::FEX address space and cache limits
+  static constexpr uint64_t GetVirtualMemSize() {
+    return WineNX::FEX::LookupAddressSpace(true);
+  }
+  static constexpr uint64_t GetCodeCacheLimit() {
+    return WineNX::FEX::CodeCacheLimit(true);
+  }
+#endif
+
   CodeBufferAllocation AtomicAllocateBuffer(size_t Size) {
     Size = FEXCore::AlignUp(Size, 16);
     LOGMAN_THROW_A_FMT(reinterpret_cast<uintptr_t>(CodeBufferOffset.load()) % 16 == 0, "Buffer needs to always be 16B aligned!");

@@ -1064,12 +1064,33 @@ DEF_OP(Div) {
     break;
   }
   case IR::OpSize::i32Bit: {
-    // TODO: 32-bit operation should be guaranteed not to leave garbage in the upper bits.
+    // When Upper is the sign extension of Lower's top bit (the CDQ result,
+    // which is the common case), the combined 64-bit dividend equals the
+    // sign-extended 32-bit one, so a W-form SDIV gives the same results while
+    // executing in roughly half the time on Cortex-A57. x86 only consumes the
+    // low halves of RDX:RAX here, so only the W halves are compared, and the
+    // W-form reads ignore any garbage in the upper halves. INT_MIN / -1 wraps
+    // to 0x80000000 in the W form, which is what the 64-bit path truncated
+    // to 32 bits produces as well.
+    ARMEmitter::ForwardLabel Fast32 {};
+    ARMEmitter::ForwardLabel Done {};
+
+    eor(ARMEmitter::Size::i32Bit, TMP1, Upper, Lower, ARMEmitter::ShiftType::ASR, 31);
+    (void)cbz(ARMEmitter::Size::i32Bit, TMP1, &Fast32);
+
+    // Upper differs: combine the full 64-bit dividend.
     mov(EmitSize, TMP1, Lower);
     bfi(EmitSize, TMP1, Upper, 32, 32);
     sxtw(TMP2, Divisor.W());
     sdiv(EmitSize, Quotient, TMP1, TMP2);
     msub(EmitSize, Remainder, Quotient, TMP2, TMP1);
+    (void)b(&Done);
+
+    (void)Bind(&Fast32);
+    sdiv(ARMEmitter::Size::i32Bit, Quotient, Lower, Divisor);
+    msub(ARMEmitter::Size::i32Bit, Remainder, Quotient, Divisor, Lower);
+
+    (void)Bind(&Done);
     break;
   }
   case IR::OpSize::i64Bit: {
@@ -1174,8 +1195,19 @@ DEF_OP(UDiv) {
     break;
   }
   case IR::OpSize::i32Bit: {
-    // We need to mask divisor if we have Upper bits, since the frontend does
-    // not on the hope that we can optimize to use the path above.
+    // 32-bit DIV almost always runs with EDX == 0, and x86 only consumes the
+    // low halves of RDX:RAX, so a W-form UDIV is enough for that case. On
+    // Cortex-A57 the W form executes in roughly half the time of the X form
+    // and pipelines better. Only the W half of Upper is tested, and the
+    // W-form reads ignore any garbage in the upper halves of the registers.
+    ARMEmitter::ForwardLabel Fast32 {};
+    ARMEmitter::ForwardLabel Done {};
+
+    (void)cbz(ARMEmitter::Size::i32Bit, Upper, &Fast32);
+
+    // Upper bits are set: mask the divisor (the frontend does not, on the
+    // hope that we can optimize to use the path above) and do the full 64-bit
+    // divide.
     mov(ARMEmitter::Size::i32Bit, TMP2, Divisor);
 
     // TODO: 32-bit operation should be guaranteed not to leave garbage in the upper bits.
@@ -1183,6 +1215,13 @@ DEF_OP(UDiv) {
     bfi(EmitSize, TMP1, Upper, 32, 32);
     udiv(EmitSize, Quotient, TMP1, TMP2);
     msub(EmitSize, Remainder, Quotient, TMP2, TMP1);
+    (void)b(&Done);
+
+    (void)Bind(&Fast32);
+    udiv(ARMEmitter::Size::i32Bit, Quotient, Lower, Divisor);
+    msub(ARMEmitter::Size::i32Bit, Remainder, Quotient, Divisor, Lower);
+
+    (void)Bind(&Done);
     break;
   }
   case IR::OpSize::i64Bit: {

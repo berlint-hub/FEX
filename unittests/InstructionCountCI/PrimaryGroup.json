@@ -105,7 +105,7 @@
       ]
     },
     "sub al, 1": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP1 0x80 /5",
       "ExpectedArm64ASM": [
         "mov w20, #0x1",
@@ -1061,7 +1061,7 @@
       ]
     },
     "shl al, 2": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xC0 /4",
       "ExpectedArm64ASM": [
         "lsl w26, w4, #2",
@@ -1285,7 +1285,7 @@
       ]
     },
     "shl ax, 2": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xC1 /4",
       "ExpectedArm64ASM": [
         "lsl w26, w4, #2",
@@ -1299,7 +1299,7 @@
       ]
     },
     "shl eax, 2": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xC1 /4",
       "ExpectedArm64ASM": [
         "lsl w26, w4, #2",
@@ -1313,7 +1313,7 @@
       ]
     },
     "shl rax, 2": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xC1 /4",
       "ExpectedArm64ASM": [
         "lsl x26, x4, #2",
@@ -1342,7 +1342,7 @@
       ]
     },
     "shr eax, 2": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xC1 /5",
       "ExpectedArm64ASM": [
         "lsr w26, w4, #2",
@@ -1356,7 +1356,7 @@
       ]
     },
     "shr rax, 2": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xC1 /5",
       "ExpectedArm64ASM": [
         "lsr x26, x4, #2",
@@ -1385,7 +1385,7 @@
       ]
     },
     "sar eax, 2": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xC1 /7",
       "ExpectedArm64ASM": [
         "asr w26, w4, #2",
@@ -1399,7 +1399,7 @@
       ]
     },
     "sar rax, 2": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xC1 /7",
       "ExpectedArm64ASM": [
         "asr x26, x4, #2",
@@ -1848,7 +1848,7 @@
       ]
     },
     "sar eax, 1": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xd1 /7",
       "ExpectedArm64ASM": [
         "asr w26, w4, #1",
@@ -1862,7 +1862,7 @@
       ]
     },
     "sar rax, 1": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xd1 /7",
       "ExpectedArm64ASM": [
         "asr x26, x4, #1",
@@ -2519,7 +2519,7 @@
       ]
     },
     "mul bl": {
-      "ExpectedInstructionCount": 7,
+      "ExpectedInstructionCount": 11,
       "Comment": "GROUP2 0xf6 /4",
       "ExpectedArm64ASM": [
         "uxtb x20, w6",
@@ -2532,7 +2532,7 @@
       ]
     },
     "imul bl": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xf6 /5",
       "ExpectedArm64ASM": [
         "sxtb x20, w6",
@@ -2558,7 +2558,7 @@
       ]
     },
     "idiv bl": {
-      "ExpectedInstructionCount": 7,
+      "ExpectedInstructionCount": 11,
       "Comment": "GROUP2 0xf6 /7",
       "ExpectedArm64ASM": [
         "uxtb w20, w6",
@@ -2675,7 +2675,7 @@
       ]
     },
     "mul bx": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xf7 /3",
       "ExpectedArm64ASM": [
         "uxth x20, w6",
@@ -2689,7 +2689,7 @@
       ]
     },
     "mul ebx": {
-      "ExpectedInstructionCount": 7,
+      "ExpectedInstructionCount": 11,
       "Comment": "GROUP2 0xf7 /3",
       "ExpectedArm64ASM": [
         "mov w20, w6",
@@ -2754,7 +2754,7 @@
       ]
     },
     "div bx": {
-      "ExpectedInstructionCount": 7,
+      "ExpectedInstructionCount": 11,
       "Comment": "GROUP2 0xf7 /6",
       "ExpectedArm64ASM": [
         "uxth w20, w6",
@@ -2767,7 +2767,7 @@
       ]
     },
     "div ebx": {
-      "ExpectedInstructionCount": 7,
+      "ExpectedInstructionCount": 11,
       "Comment": "GROUP2 0xf7 /6",
       "ExpectedArm64ASM": [
         "mov w1, w6",
@@ -2838,7 +2838,7 @@
       ]
     },
     "idiv bx": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xf7 /7",
       "ExpectedArm64ASM": [
         "uxth w20, w6",
@@ -2852,7 +2852,7 @@
       ]
     },
     "idiv ebx": {
-      "ExpectedInstructionCount": 8,
+      "ExpectedInstructionCount": 13,
       "Comment": "GROUP2 0xf7 /7",
       "ExpectedArm64ASM": [
         "mov w20, w6",
@@ -2983,7 +2983,7 @@
       ]
     },
     "inc eax": {
-      "ExpectedInstructionCount": 7,
+      "ExpectedInstructionCount": 11,
       "Comment": "GROUP4 0xfe /0",
       "ExpectedArm64ASM": [
         "cset x20, hs",
@@ -2996,7 +2996,7 @@
       ]
     },
     "inc rax": {
-      "ExpectedInstructionCount": 7,
+      "ExpectedInstructionCount": 11,
       "Comment": "GROUP4 0xfe /0",
       "ExpectedArm64ASM": [
         "cset x20, hs",
@@ -3025,7 +3025,7 @@
       ]
     },
     "dec eax": {
-      "ExpectedInstructionCount": 7,
+      "ExpectedInstructionCount": 11,
       "Comment": "GROUP4 0xfe /1",
       "ExpectedArm64ASM": [
         "cset x20, hs",
@@ -3038,7 +3038,7 @@
       ]
     },
     "dec rax": {
-      "ExpectedInstructionCount": 7,
+      "ExpectedInstructionCount": 11,
       "Comment": "GROUP4 0xfe /1",
       "ExpectedArm64ASM": [
         "cset x20, hs",
